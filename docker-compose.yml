@@ -1,0 +1,25 @@
+version: "3"
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+    - "5432:5432"
+    networks:
+      - default
+
+  web:
+    build: .
+    depends_on:
+      - db
+    ports:
+    - "8000:8000"
+    volumes:
+      - .:/eshop
+    command:
+      /bin/bash -c "python eshop/manage.py migrate && python eshop/manage.py runserver 0.0.0.0:8000"
+    networks:
+      - default
